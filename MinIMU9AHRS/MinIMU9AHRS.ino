@@ -124,6 +124,10 @@ float roll;
 float pitch;
 float yaw;
 
+float inityaw = 0;
+boolean yawset = false;
+int blinkCount;
+
 float errorRollPitch[3]= {0,0,0}; 
 float errorYaw[3]= {0,0,0};
 
@@ -225,6 +229,18 @@ void loop() //Main Loop
     Euler_angles();
     // ***
    
+    if( yawset == false ) {
+      blinkCount++; 
+      if (blinkCount > 15) {digitalWrite(STATUS_LED, HIGH);}
+      if (blinkCount > 30) {digitalWrite(STATUS_LED, LOW); blinkCount=0;}      
+      if (millis() > 20000) {
+        inityaw = yaw;
+        yawset = true;
+        digitalWrite(STATUS_LED, HIGH);   // set the LED on
+      }
+    }
+    
+    yaw = yaw - inityaw;
     printdata();
   }
    
